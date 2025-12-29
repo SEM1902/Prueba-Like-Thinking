@@ -34,9 +34,5 @@ packages = ["domain_layer"]
 [tool.setuptools.package-dir]
 "" = "src"
 
-[tool.setuptools]
-packages = ["domain_layer"]
 
-[tool.setuptools.package-dir]
-"" = "src"
 
