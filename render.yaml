@@ -8,7 +8,6 @@ services:
     rootDir: ./backend
     dockerContext: ./
     dockerfilePath: ./backend/Dockerfile
-    # numReplicas: 1 # Not needed for free plan/web service defaults
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
@@ -58,13 +57,12 @@ services:
     plan: free
     rootDir: ./frontend
     dockerfilePath: ./frontend/Dockerfile
-    # numReplicas: 1 # Removed
     envVars:
       - key: REACT_APP_API_URL
         fromService:
           type: web
           name: prueba-backend
-          property: url
+          property: connectionString
 
 databases:
   - name: prueba-db
