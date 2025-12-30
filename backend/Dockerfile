@@ -32,4 +32,6 @@ EXPOSE 8000
 
 # Comando para producción con Gunicorn
 # Asegurarse de que se recojan los estáticos antes de arrancar
-CMD sh -c "python manage.py collectstatic --noinput && python manage.py migrate && python create_test_users.py && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+RUN chmod +x /app/backend/start.sh
+
+CMD ["/app/backend/start.sh"]
