@@ -1,3 +1,4 @@
+# Force Render Deploy - 30 Dec 2025
 services:
   # Backend Service (Django + Gunicorn)
   - type: web
@@ -5,7 +6,7 @@ services:
     env: docker
     region: oregon
     plan: free
-    # rootDir: ./backend # REMOVED: context is set to root below, so we don't switch dir
+    # Docker Context: Root (to include domain/ folder)
     dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     envVars:
@@ -56,7 +57,7 @@ services:
     region: oregon
     plan: free
     rootDir: ./frontend
-    dockerfilePath: Dockerfile # Corrected: Relative to rootDir (./frontend)
+    dockerfilePath: Dockerfile
     envVars:
       - key: REACT_APP_API_URL
         fromService:
@@ -68,5 +69,5 @@ databases:
   - name: prueba-db
     databaseName: prueba_db
     user: prueba_user
-    plan: free # Note: Free DBs expire after 90 days
+    plan: free
     region: oregon

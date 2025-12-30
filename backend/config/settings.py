@@ -207,6 +207,7 @@ if FRONTEND_URL:
     CSRF_TRUSTED_ORIGINS.append(FRONTEND_URL)
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Email Configuration (para envío de PDFs)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
