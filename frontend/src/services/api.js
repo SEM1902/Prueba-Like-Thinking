@@ -1,7 +1,16 @@
 import axios from 'axios';
 
-let apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-if (!apiUrl.startsWith('http')) {
+let apiUrl = process.env.REACT_APP_API_URL;
+
+if (!apiUrl) {
+  if (process.env.NODE_ENV === 'production') {
+    apiUrl = ''; // Use relative paths in production (served by same origin)
+  } else {
+    apiUrl = 'http://localhost:8000'; // Default for local dev
+  }
+}
+
+if (apiUrl && !apiUrl.startsWith('http') && apiUrl !== '') {
   apiUrl = `https://${apiUrl}`;
 }
 
