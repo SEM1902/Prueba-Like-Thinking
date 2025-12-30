@@ -1,55 +1,82 @@
-# Guía de Despliegue en Vercel
+# Guía Completa de Despliegue en Vercel (Monorepo Django + React)
 
-Este proyecto está configurado para desplegarse en Vercel como un monorepo (Frontend React + Backend Django).
+Esta guía explica paso a paso cómo desplegar este proyecto (que contiene tanto Backend como Frontend) en un solo proyecto de Vercel.
 
-Toma en cuenta que **Vercel es Serverless**, por lo que la base de datos local (PostgreSQL en tu máquina) no funcionará.
+## 1. Preparar Base de Datos en la Nube
+Vercel no aloja bases de datos. Necesitas una externa.
 
-## Pasos para Desplegar
+1.  Crea una cuenta gratuita en [Neon.tech](https://neon.tech) o [Railway.app](https://railway.app).
+2.  Crea un nuevo proyecto/base de datos PostgreSQL.
+3.  Copia la **URL de conexión** (ej: `postgres://usuario:password@host.aws.neon.tech/dbname`).
 
-### 1. Base de Datos en la Nube
-Antes de desplegar, necesitas una base de datos PostgreSQL accesible desde internet.
-*   Servicios recomendados (Capa gratuita): **Neon**, **Supabase**, **Railway**.
-*   Obtén la URL de conexión (ej: `postgres://user:pass@host:port/dbname`).
+## 2. Preparar Vercel
 
-### 2. Configuración en Vercel
-1.  Sube tu código a **GitHub**.
-2.  Entra a [Vercel](https://vercel.com) e importa tu repositorio.
-3.  Vercel detectará `vercel.json` y configurará el build automáticamente.
-4.  **IMPORTANTE:** Antes de darle a "Deploy", ve a la sección **Environment Variables** y agrega las siguientes variables (usando los datos de tu nueva BD en la nube):
+1.  Ve a [Vercel](https://vercel.com) e inicia sesión con GitHub.
+2.  Haz clic en **"Add New..."** -> **"Project"**.
+3.  Importa el repositorio de **PruebaLT**.
+4.  **IMPORTANTE:** En la pantalla de configuración ("Configure Project"):
+    *   **Framework Preset:** Déjalo en `Other` o `None` (Vercel detectará el `vercel.json`).
+    *   **Root Directory:** Déjalo en `./` (la raíz del repositorio). **NO** selecciones `frontend` ni `backend`.
 
-```env
-# Variables Obligatorias
-SECRET_KEY=tu_clave_secreta_segura
-DEBUG=False
-GEMINI_API_KEY=tu_api_key_de_google_gemini
+## 3. Variables de Entorno (Environment Variables)
 
-# Base de Datos (Cloud)
-DB_NAME=nombre_db
-DB_USER=usuario_db
-DB_PASSWORD=contraseña_db
-DB_HOST=host_cloud_db  (ej: ep-xyz.us-east-1.aws.neon.tech)
-DB_PORT=5432
+Antes de dar clic en "Deploy", despliega la sección **Environment Variables** y agrega:
 
-# Correo (si usas la función de PDFs)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_HOST_USER=tu_email@gmail.com
-EMAIL_HOST_PASSWORD=tu_app_password
-```
+| Variable | Valor |
+| :--- | :--- |
+| `SECRET_KEY` | Una cadena aleatoria larga (ej: `k3y_s3cr3t4_...`) |
+| `DEBUG` | `False` |
+| `DB_NAME` | (Nombre de tu BD en Neon/Railway) |
+| `DB_USER` | (Usuario de tu BD) |
+| `DB_PASSWORD` | (Contraseña de tu BD) |
+| `DB_HOST` | (Host de tu BD, sin `https://`) |
+| `DB_PORT` | `5432` |
+| `GEMINI_API_KEY` | Tu API Key de Google Gemini |
 
-### 3. Migraciones
-Una vez desplegado, la base de datos en la nube estará vacía. Necesitas ejecutar las migraciones.
-Vercel no permite ejecutar comandos shell directamente en las funciones, pero puedes:
-1.  Conectarte a tu BD Cloud desde tu computadora local.
-2.  Cambiar temporalmente tu `.env` local para apuntar a la BD Cloud.
-3.  Ejecutar `python backend/manage.py migrate` desde tu terminal local.
-    *   Esto creará las tablas en la nube.
-4.  Crear superusuario del mismo modo: `python backend/manage.py createsuperuser`.
+*Para el email (opcional):* `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`.
 
-### 4. Urls
-*   Tu frontend estará en: `https://tu-proyecto.vercel.app`
-*   Tu backend responderá en: `https://tu-proyecto.vercel.app/api/...`
+## 4. Desplegar
 
-## Notas
-*   El archivo `vercel.json` incluido en la raíz se encarga de dirigir las peticiones `/api` al backend y el resto al frontend.
-*   No se realizaron modificaciones al código fuente del proyecto, solo se agregó configuración de despliegue.
+Haz clic en **Deploy**.
+
+Vercel leerá el archivo `vercel.json` de la raíz, el cual le indica que debe:
+1.  Instalar Python y dependencias para el Backend.
+2.  Instalar Node.js y construir el Frontend (`npm run build`).
+
+## 5. Solución de Problemas Comunes
+
+### Error 404: NOT_FOUND al abrir la página
+Esto suele pasar si la "Ruta de Salida" del frontend no coincide o si Vercel ignora el `vercel.json`.
+
+**Solución 1: Verificar `vercel.json`**
+Asegúrate de que el archivo `vercel.json` esté en la RAÍZ del repositorio (junto a `README.md`, no dentro de carpetas).
+
+**Solución 2: Build Command en Vercel**
+En los "Settings" del proyecto en Vercel -> **Check Settings** -> **Build & Development Settings**:
+*   Asegúrate de que **Output Directory** esté vacío o en default. El `vercel.json` ya se encarga de esto.
+*   Si tuviste que cambiar algo, ve a "Deployments" y dale a **Redeploy**.
+
+### La Base de Datos está vacía / Error de conexión
+Al desplegar, el código se sube pero la BD está vacía.
+
+**Pasos para migrar la BD en la nube:**
+Como no tienes terminal en Vercel, hazlo desde tu PC:
+
+1.  Abre tu archivo local `backend/.env`.
+2.  **(Temporalmente)** Cambia los datos de `DB_HOST`, `DB_USER`, etc., por los de tu base de datos en la NUBE (Neon/Railway).
+3.  Ejecuta en tu terminal local:
+    ```bash
+    python backend/manage.py migrate
+    python backend/manage.py createsuperuser
+    ```
+4.  **(Importante)** Vuelve a poner los datos locales en tu `.env` para seguir desarrollando en tu máquina.
+
+## 6. Verificando el Backend
+Si el frontend falla, verifica si el backend vive:
+Intenta acceder a `https://tu-proyecto.vercel.app/api/admin/`
+*   Si carga el login de Django: ¡El backend funciona! El problema es solo visual del frontend.
+*   Si da Error 500: Revisa los Logs en el dashboard de Vercel -> Functions.
+
+---
+**Nota sobre `vercel.json`:**
+El archivo de configuración actual usa el sistema "Legacy Builds" de Vercel porque es la única forma confiable de desplegar Django y React juntos en el mismo repositorio sin configuraciones complejas de Workspaces. Si Vercel te muestra advertencias sobre "Legacy Builds", puedes ignorarlas, seguirá funcionando.
