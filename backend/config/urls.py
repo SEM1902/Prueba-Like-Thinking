@@ -3,10 +3,13 @@ URL configuration for config project.
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-
-# ...
-
+from django.conf import settings
+from django.conf.urls.static import static
+from django.http import JsonResponse
 from config.views import serve_react
+
+def health_check(request):
+    return JsonResponse({'status': 'ok'})
 
 urlpatterns = [
     path('api/health/', health_check, name='health_check'),
