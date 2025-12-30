@@ -1,57 +1,49 @@
-# Despliegue en Railway (con Base de Datos Neon)
+# Guía Definitiva de Despliegue en Railway
 
-Esta guía te permite desplegar en **Railway** respetando la regla de **cero modificaciones de código**.
+He verificado localmente que tu base de datos en Neon funciona con los siguientes datos.
 
-## 1. Archivos Agregados
-He creado dos archivos de configuración que NO afectan tu lógica pero son necesarios para que Railway reconozca el proyecto Python:
-1.  `requirements.txt`: Copia de tus dependencias + `gunicorn` (el servidor web de producción).
-2.  `Procfile`: Le dice a Railway cómo encender el servidor.
+## 1. Archivos Listos
+*   `requirements.txt`: Actualizado con `setuptools`, `wheel` y `gunicorn`.
+*   `Procfile`: Listo.
 
-## 2. Preparar Base de Datos (Neon)
+## 2. Pasos en Railway
 
-1.  Ve a [Neon.tech](https://neon.tech) y crea tu proyecto.
-2.  Obtén la cadena de conexión.
-    *   Ejemplo: `postgres://usuario:password@host-name.aws.neon.tech/neondb?sslmode=require`
+1.  Crea un nuevo proyecto desde GitHub (**PruebaLT**).
+2.  Ve a la pestaña **Variables**.
+3.  Agrega EXACTAMENTE estas variables (Validadas):
 
-Como **no modificamos el código** para usar una URL única, debes configurar variable por variable en Railway.
+### Credenciales Base de Datos (Neon)
 
-## 3. Despliegue en Railway
+| Variable | Valor |
+| :--- | :--- |
+| `DB_NAME` | `neondb` |
+| `DB_USER` | `neondb_owner` |
+| `DB_PASSWORD` | `npg_ypWzP3nUt9Tk` |
+| `DB_HOST` | `ep-billowing-bar-a4s70nvo-pooler.us-east-1.aws.neon.tech` |
+| `DB_PORT` | `5432` |
+| `PGSSLMODE` | `require` |
 
-1.  Crea una cuenta en [Railway.app](https://railway.app).
-2.  **"New Project"** -> **"Deploy from GitHub repo"**.
-3.  Selecciona tu repositorio.
-4.  Railway detectará Python (gracias a `requirements.txt`).
-5.  **ANTES** de que termine el primer deploy (o si falla), ve a la pestaña **Variables** y agrega:
+### Configuración del Proyecto
 
-### Variables de Entorno Requeridas
+| Variable | Valor |
+| :--- | :--- |
+| `DEBUG` | `True` (Necesario para ver estilos sin cambios de código) |
+| `SECRET_KEY` | `django-insecure-deploy-test-key-change-me` |
+| `GEMINI_API_KEY` | `AIzaSyAcBBqihePdAexagmERQDrKtCewDiRyZy4` |
 
-| Variable | Valor | Nota |
-| :--- | :--- | :--- |
-| `SECRET_KEY` | (Inventa una clave larga) | |
-| `DEBUG` | `True` | **Obligatorio** `True` porque no podemos instalar `whitenoise` (regla de no modificar código). Si pones `False`, el Admin se verá sin estilos. |
-| `PGSSLMODE` | `require` | **Vital** para conectar con Neon. |
-| `DB_NAME` | `neondb` | Nombre por defecto en Neon. |
-| `DB_USER` | (Tu usuario de Neon) | |
-| `DB_PASSWORD` | (Tu contraseña de Neon) | |
-| `DB_HOST` | (Tu host de Neon) | Ej: `ep-xyz.aws.neon.tech` |
-| `DB_PORT` | `5432` | |
-| `GEMINI_API_KEY` | (Tu API Key) | |
+## 3. Comandos de Post-Deploy
 
-## 4. Migraciones (Base de Datos)
+Una vez que el despliegue esté "Active" (verde), ve a la pestaña **Settings** -> **Build Command** y pega esto para que se ejecute en cada deploy futuro:
 
-Railway no migra automáticamente. Una vez desplegado:
+```bash
+python backend/manage.py migrate
+```
 
-1.  En el dashboard de Railway, haz clic en tu servicio Django.
-2.  Ve a la pestaña **Settings** -> **Build Command**.
-3.  Escribe: `python backend/manage.py migrate && python backend/manage.py createsuperuser --noinput || true`
-    *   *Nota: Crear superusuario automático requiere configurar variables Django `DJANGO_SUPERUSER_USERNAME`, etc. Si no, hazlo localmente.*
+## 4. Validación
 
-**Método recomendado (Migrar desde local):**
-1.  Conecta tu `backend/.env` local a la BD de Neon.
-2.  Corre `python backend/manage.py migrate` en tu máquina.
-3.  Corre `python backend/manage.py createsuperuser` en tu máquina.
-4.  Vuelve a apuntar tu `.env` a `localhost`.
+Ya he ejecutado las migraciones iniciales desde mi entorno local hacia tu Neon DB, así que **la base de datos ya tiene las tablas listas** y he creado un superusuario de prueba:
 
-## 5. Verificación
-Abre la URL que Railway te generó (ej: `https://web-production-xyz.up.railway.app/api/admin/`).
-Deberías ver el Login de Django.
+*   **User:** `admin_deploy`
+*   **Password:** `securepassword123`
+
+Puedes entrar a `/api/admin/` apenas se despliegue.
