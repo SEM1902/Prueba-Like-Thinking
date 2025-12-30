@@ -1,0 +1,64 @@
+services:
+  # Backend Service (Django + Gunicorn)
+  - type: web
+    name: prueba-backend
+    env: docker
+    region: oregon
+    plan: free
+    rootDir: ./backend
+    dockerContext: ./
+    dockerfilePath: ./backend/Dockerfile
+    numReplicas: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DB_NAME
+        fromDatabase:
+          name: prueba-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: prueba-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: prueba-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: prueba-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: prueba-db
+          property: port
+      - key: ALLOWED_HOSTS
+        value: "*" # Can be tightened later
+      # Add other necessary env vars here (e.g., EMAIL_*, GEMINI_API_KEY)
+
+  # Frontend Service (React + Nginx)
+  - type: web
+    name: prueba-frontend
+    env: docker
+    region: oregon
+    plan: free
+    rootDir: ./frontend
+    dockerfilePath: ./frontend/Dockerfile
+    numReplicas: 1
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: prueba-backend
+          property: url
+
+databases:
+  - name: prueba-db
+    databaseName: prueba_db
+    user: prueba_user
+    plan: free # Note: Free DBs expire after 90 days
+    region: oregon

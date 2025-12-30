@@ -23,6 +23,6 @@ COPY . .
 # Exponer el puerto
 EXPOSE 8000
 
-# Comando por defecto (puede ser sobrescrito en docker-compose)
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
+# Comando para producción con Gunicorn
+# Asegurarse de que se recojan los estáticos antes de arrancar
+CMD sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
