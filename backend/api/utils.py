@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from io import BytesIO
-from .models import Inventario
+from domain_layer.models import Inventario
 import hashlib
 import json
 from datetime import datetime

@@ -3,7 +3,8 @@ Servicios para funcionalidades adicionales con IA usando Google Gemini (Plan Gra
 """
 import google.generativeai as genai
 from django.conf import settings
-from .models import User, Empresa, Producto, Inventario
+from .models import User
+from domain_layer.models import Empresa, Producto, Inventario
 from .utils import send_stock_alert_email
 import json
 

@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import HttpResponse
-from .models import User, Empresa, Producto, Inventario
+from .models import User
+from domain_layer.models import Empresa, Producto, Inventario
 from .serializers import (
     UserSerializer,
     LoginSerializer,

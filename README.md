@@ -1,6 +1,8 @@
 # Sistema de Gestión de Empresas y Productos
 
-Sistema completo desarrollado con Django, React y PostgreSQL que permite gestionar empresas, productos e inventarios con funcionalidades avanzadas de IA y Blockchain.
+Sistema completo desarrollado con Django, React y PostgreSQL que permite gestionar empresas, productos e inventarios con funcionalidades avanzadas de IA (Google Gemini) y Blockchain.
+
+Este proyecto ha sido re-arquitecturado para seguir **Clean Architecture**, con una capa de dominio separada.
 
 ## Características Principales
 
@@ -11,9 +13,10 @@ Sistema completo desarrollado con Django, React y PostgreSQL que permite gestion
 - ✅ **Roles de Usuario**: Administrador y Externo con permisos diferenciados
 - ✅ **Generación de PDFs**: Exportación de inventarios a PDF
 - ✅ **Envío de Emails**: Envío de PDFs por correo electrónico
-- ✅ **IA Integrada**: Sugerencias de productos usando OpenAI
+- ✅ **IA Integrada**: Sugerencias de productos, predicciones de stock y chatbot inteligente usando **Google Gemini**
 - ✅ **Blockchain**: Hash de transacciones para el inventario
 - ✅ **Atomic Design**: Estructura de componentes siguiendo Atomic Design
+- ✅ **Clean Architecture**: Lógica de negocio aislada en una capa de dominio independiente
 
 ## Tecnologías Utilizadas
 
@@ -23,7 +26,7 @@ Sistema completo desarrollado con Django, React y PostgreSQL que permite gestion
 - PostgreSQL
 - JWT Authentication
 - ReportLab (PDFs)
-- OpenAI API
+- **Google Gemini API** (IA)
 - Web3 (Blockchain)
 
 ### Frontend
@@ -48,115 +51,79 @@ git clone <url-del-repositorio>
 cd Prueba
 ```
 
-2. Configurar variables de entorno:
-```bash
-cp backend/.env.example backend/.env
-# Editar backend/.env con tus configuraciones
-```
-
-3. Construir y levantar los contenedores:
+2. Construir y levantar los contenedores:
 ```bash
 docker-compose up --build
-```
-
-4. En otra terminal, ejecutar migraciones:
-```bash
-docker-compose exec backend python manage.py migrate
-```
-
-5. Crear superusuario:
-```bash
-docker-compose exec backend python manage.py createsuperuser
 ```
 
 El sistema estará disponible en:
 - Frontend: `http://localhost:3000`
 - Backend: `http://localhost:8000`
-- PostgreSQL: `localhost:5432`
-
-#### Comandos útiles de Docker
-
-```bash
-# Detener los contenedores
-docker-compose down
-
-# Ver logs
-docker-compose logs -f
-
-# Ejecutar comandos en el backend
-docker-compose exec backend python manage.py <comando>
-
-# Reconstruir contenedores
-docker-compose up --build
-```
 
 ### Opción 2: Instalación Manual
 
 #### Prerrequisitos
-- Python 3.8+
+- Python 3.9+
 - Node.js 14+
 - PostgreSQL
-- npm o yarn
 
-### Backend
+#### Backend (Django)
 
-1. Navegar a la carpeta del backend:
+1. Crear un entorno virtual y activarlo:
 ```bash
-cd backend
+python -m venv .venv
+source .venv/bin/activate  # Mac/Linux
+# .venv\Scripts\activate   # Windows
 ```
 
-2. Crear un entorno virtual:
+2. Instalar dependencias:
 ```bash
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+pip install -r backend/requirements.txt
 ```
 
-3. Instalar dependencias:
-```bash
-pip install -r requirements.txt
-```
-
-4. Configurar variables de entorno. Crear un archivo `.env` en la carpeta `backend`:
+3. Crear archivo `.env` en la carpeta `backend/`:
 ```env
-SECRET_KEY=tu-secret-key-aqui
-DB_NAME=prueba_db
-DB_USER=postgres
-DB_PASSWORD=postgres
+SECRET_KEY=tu-clave-secreta
+DEBUG=True
+DB_NAME=postgres
+DB_USER=tu_usuario_postgres
+DB_PASSWORD=tu_password
 DB_HOST=localhost
 DB_PORT=5432
+
+# Email Configuration
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_HOST_USER=tu-email@gmail.com
-EMAIL_HOST_PASSWORD=tu-password
-OPENAI_API_KEY=tu-openai-api-key
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=tu_email@gmail.com
+EMAIL_HOST_PASSWORD=tu_app_password
+
+# AI Configuration (Google Gemini)
+GEMINI_API_KEY=tu_api_key_de_gemini
 ```
 
-5. Crear la base de datos PostgreSQL:
-```sql
-CREATE DATABASE prueba_db;
-```
-
-6. Ejecutar migraciones:
+4. Ejecutar migraciones:
+**Nota:** Este proyecto usa una app para la capa de dominio (`domain_layer`).
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+python backend/manage.py migrate api
+python backend/manage.py migrate domain_layer --fake # Si las tablas ya existen
+# O si es una instalación limpia:
+# python backend/manage.py migrate domain_layer
 ```
 
-7. Crear un superusuario:
+5. Crear superusuario:
 ```bash
-python manage.py createsuperuser
+python backend/manage.py createsuperuser
 ```
 
-8. Iniciar el servidor:
+6. Iniciar servidor:
 ```bash
-python manage.py runserver
+python backend/manage.py runserver
 ```
 
-El backend estará disponible en `http://localhost:8000`
+#### Frontend (React)
 
-### Frontend
-
-1. Navegar a la carpeta del frontend:
+1. Navegar a la carpeta frontend:
 ```bash
 cd frontend
 ```
@@ -166,114 +133,37 @@ cd frontend
 npm install
 ```
 
-3. Iniciar el servidor de desarrollo:
+3. Iniciar servidor:
 ```bash
 npm start
 ```
-
-El frontend estará disponible en `http://localhost:3000`
 
 ## Estructura del Proyecto
 
 ```
 Prueba/
+├── domain/                  # [NUEVO] Capa de Dominio Independiente
+│   └── src/
+│       └── domain_layer/
+│           └── models.py    # Entidades de negocio (Empresa, Producto, Inventario)
 ├── backend/
-│   ├── api/                 # Aplicación principal
-│   │   ├── models.py        # Modelos de datos
-│   │   ├── views.py         # Vistas y endpoints
-│   │   ├── serializers.py   # Serializadores
-│   │   ├── utils.py         # Utilidades (PDF, Blockchain)
-│   │   └── services.py      # Servicios (IA)
+│   ├── api/                 # Capa de Infraestructura/API
+│   │   ├── models.py        # Solo modelo User
+│   │   ├── views.py         # Controladores HTTP
+│   │   ├── serializers.py   # Adaptadores de datos
+│   │   └── services.py      # Servicios externos (IA, Email)
 │   ├── config/              # Configuración Django
 │   └── manage.py
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── atoms/       # Componentes básicos
-│   │   │   ├── molecules/   # Componentes compuestos
-│   │   │   └── organisms/   # Componentes complejos
-│   │   ├── pages/           # Páginas principales
-│   │   ├── context/         # Context API
-│   │   └── services/        # Servicios API
-│   └── public/
+├── frontend/                # Interfaz de Usuario (React)
 └── README.md
 ```
 
-## Funcionalidades por Rol
+## Funcionalidades de IA (Google Gemini)
 
-### Administrador
-- Crear, editar y eliminar empresas
-- Crear, editar y eliminar productos
-- Gestionar inventario
-- Descargar PDFs de inventario
-- Enviar PDFs por email
-- Ver sugerencias de productos con IA
-
-### Externo
-- Ver empresas (solo lectura)
-- Visualizar productos e inventario
-
-## API Endpoints
-
-### Autenticación
-- `POST /api/login/` - Iniciar sesión
-
-### Empresas
-- `GET /api/empresas/` - Listar empresas
-- `POST /api/empresas/` - Crear empresa (Admin)
-- `GET /api/empresas/{nit}/` - Obtener empresa
-- `PUT /api/empresas/{nit}/` - Actualizar empresa (Admin)
-- `DELETE /api/empresas/{nit}/` - Eliminar empresa (Admin)
-
-### Productos
-- `GET /api/productos/` - Listar productos (Admin)
-- `POST /api/productos/` - Crear producto (Admin)
-- `GET /api/productos/{id}/` - Obtener producto
-- `PUT /api/productos/{id}/` - Actualizar producto (Admin)
-- `DELETE /api/productos/{id}/` - Eliminar producto (Admin)
-- `GET /api/productos/{id}/ai_suggestions/` - Obtener sugerencias IA
-
-### Inventario
-- `GET /api/inventario/` - Listar inventario (Admin)
-- `POST /api/inventario/` - Agregar al inventario (Admin)
-- `GET /api/inventario/by_empresa/{nit}/` - Inventario por empresa
-- `GET /api/inventario/pdf/{nit}/` - Descargar PDF
-- `POST /api/inventario/send-pdf/{nit}/` - Enviar PDF por email
-
-## Funcionalidades Adicionales
-
-### IA (OpenAI)
-- Sugerencias de productos complementarios basadas en características
-- Endpoint: `GET /api/productos/{id}/ai_suggestions/`
-
-### Blockchain
-- Hash SHA-256 generado para cada transacción de inventario
-- Almacenado en el campo `transaccion_hash` del modelo Inventario
-- Simula transacciones de blockchain para trazabilidad
-
-## Buenas Prácticas Implementadas
-
-- ✅ Código limpio y estructurado
-- ✅ Atomic Design en frontend
-- ✅ Separación de responsabilidades
-- ✅ Validaciones en backend y frontend
-- ✅ Manejo de errores
-- ✅ Contraseñas encriptadas (Django Auth)
-- ✅ Permisos basados en roles
-- ✅ Documentación de código
-
-## Notas Adicionales
-
-- Las contraseñas se encriptan automáticamente usando el sistema de autenticación de Django
-- Para usar la funcionalidad de IA, es necesario configurar `OPENAI_API_KEY` en las variables de entorno
-- Para el envío de emails, configurar las credenciales SMTP en `.env`
-- El hash de blockchain se genera automáticamente al agregar productos al inventario
-
-## Desarrollo
-
-Para desarrollo, ambos servidores (backend y frontend) deben estar ejecutándose simultáneamente.
+1. **Sugerencias de Productos:** Al ver un producto, la IA sugiere complementarios.
+2. **Predicción de Stock:** Analiza el inventario y alerta sobre posibles quiebres de stock.
+3. **Chatbot Inteligente:** Responde preguntas en lenguaje natural sobre el estado de tu inventario y empresas.
 
 ## Licencia
 
 Este proyecto fue desarrollado como prueba técnica.
-

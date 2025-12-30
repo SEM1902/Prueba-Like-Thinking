@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Empresa, Producto, Inventario
+from .models import User
+from domain_layer.models import Empresa, Producto, Inventario
 
 
 @admin.register(User)

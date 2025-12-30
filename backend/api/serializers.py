@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import User, Empresa, Producto, Inventario
+from .models import User
+from domain_layer.models import Empresa, Producto, Inventario
 
 
 class UserSerializer(serializers.ModelSerializer):
