@@ -5,7 +5,6 @@ services:
     env: docker
     region: oregon
     plan: free
-    plan: free
     # rootDir: ./backend # REMOVED: context is set to root below, so we don't switch dir
     dockerContext: .
     dockerfilePath: ./backend/Dockerfile
@@ -58,6 +57,7 @@ services:
     plan: free
     rootDir: ./frontend
     dockerfilePath: Dockerfile # Corrected: Relative to rootDir (./frontend)
+    envVars:
       - key: REACT_APP_API_URL
         fromService:
           type: web
