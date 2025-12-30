@@ -22,8 +22,27 @@
             "dest": "backend/config/wsgi.py"
         },
         {
+            "src": "/static/(.*)",
+            "dest": "/frontend/static/$1"
+        },
+        {
+            "src": "/favicon.ico",
+            "dest": "/frontend/favicon.ico"
+        },
+        {
+            "src": "/manifest.json",
+            "dest": "/frontend/manifest.json"
+        },
+        {
+            "src": "/logo192.png",
+            "dest": "/frontend/logo192.png"
+        },
+        {
             "src": "/(.*)",
-            "dest": "/frontend/$1"
+            "headers": {
+                "Cache-Control": "s-maxage=0"
+            },
+            "dest": "/frontend/index.html"
         }
     ]
 }
