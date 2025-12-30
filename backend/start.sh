@@ -16,4 +16,4 @@ echo "👤 [START.SH] Ejecutando script de usuarios de prueba..."
 python create_test_users.py
 
 echo "🔥 [START.SH] Iniciando Gunicorn..."
-exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
+exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --timeout 120
