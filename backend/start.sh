@@ -9,6 +9,9 @@ python manage.py collectstatic --noinput
 echo "📦 [START.SH] Aplicando migraciones..."
 python manage.py migrate
 
+echo "💾 [START.SH] Cargando datos iniciales..."
+python manage.py loaddata db_data.json
+
 echo "👤 [START.SH] Ejecutando script de usuarios de prueba..."
 python create_test_users.py
 
