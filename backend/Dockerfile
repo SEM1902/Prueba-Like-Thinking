@@ -12,13 +12,20 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar requirements y instalar dependencias Python
-COPY requirements.txt .
+# Copiar requirements desde el contexto ROOT
+COPY backend/requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copiar el código de la aplicación
-COPY . .
+# Copiar el código de BACKEND y DOMAIN
+COPY backend/ /app/backend/
+COPY domain/ /app/domain/
+
+# Establecer el directorio de trabajo donde está manage.py
+WORKDIR /app/backend
+
+# Asegurar que Python encuentre el módulo domain
+ENV PYTHONPATH=/app
 
 # Exponer el puerto
 EXPOSE 8000
