@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
 import sys
+import os
 from pathlib import Path
 
 # Add backend directory to sys.path to ensure module resolution works in Vercel
