@@ -1,0 +1,216 @@
+An error occurred: module 'importlib.metadata' has no attribute 'packages_distributions'
+[
+{
+  "model": "sessions.session",
+  "pk": "7ah3efqjt64p87i3ak0s25i9wg0pendc",
+  "fields": {
+    "session_data": ".eJxVi0sOAiEQBe_C2kxo6O4BlyaegzQ0E4ifGHFWxrurySx0Wa9ePU2S9dHSOuo9dTV7A2b3u2Upp3r9Crn1aaMxHS_Sz4fN_QVNRvu8MQI7gFpY2LsceV4UAwvBjDUvxSFaYFBxMVjyFjxSKOQ0ZNZoybze1YowOw:1vaMMz:wsAmmdK69WcrNlouxqyv9q21XZN7JYUUSDafJ2RlLW4",
+    "expire_date": "2026-01-12T23:09:45.775Z"
+  }
+},
+{
+  "model": "api.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$bbHpEcWj6XPH6y98H8vfIq$JNehliP36ekHkbO+nZJrSc17007DKmtqboEdJiQem6s=",
+    "last_login": "2025-12-29T23:09:45.771Z",
+    "is_superuser": true,
+    "email": "estradamontoyasimon803@gmail.com",
+    "rol": "ADMINISTRADOR",
+    "is_active": true,
+    "is_staff": true,
+    "date_joined": "2025-12-26T23:57:26.208Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$jpCRFFChi6zc76005SsWJB$ZMGtK/cGWgpN1Po5nHIB1s/D9OmRz3PP5o5tC6AF5JI=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "externo@ejemplo.com",
+    "rol": "EXTERNO",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-12-26T23:58:06.443Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$ad0emkD9mg1hLjEilxsLMy$NInYwfllRa/kRo60gpSOJpYXAiQgkrPx30Gn22UMj2o=",
+    "last_login": null,
+    "is_superuser": true,
+    "email": "admin@gmail.com",
+    "rol": "ADMINISTRADOR",
+    "is_active": true,
+    "is_staff": true,
+    "date_joined": "2025-12-30T04:21:29.947Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "domain_layer.empresa",
+  "pk": "1020304050",
+  "fields": {
+    "nombre": "Prueba 2",
+    "direccion": "carrera 54 #12-2",
+    "telefono": "3129087654",
+    "fecha_creacion": "2025-12-30T01:35:29.744Z",
+    "fecha_actualizacion": "2025-12-30T01:35:29.744Z"
+  }
+},
+{
+  "model": "domain_layer.empresa",
+  "pk": "123456789",
+  "fields": {
+    "nombre": "Prueba 1",
+    "direccion": "carrera 432 1212",
+    "telefono": "3102429132",
+    "fecha_creacion": "2025-12-30T01:35:01.417Z",
+    "fecha_actualizacion": "2025-12-30T01:35:01.417Z"
+  }
+},
+{
+  "model": "domain_layer.producto",
+  "pk": 1,
+  "fields": {
+    "codigo": "CDR-001",
+    "nombre": "Prueba 1",
+    "caracteristicas": "Testeo",
+    "precio_usd": "10.00",
+    "precio_eur": "8.50",
+    "precio_cop": "36948.20",
+    "empresa": "123456789",
+    "fecha_creacion": "2025-12-30T01:35:58.661Z",
+    "fecha_actualizacion": "2025-12-30T01:35:58.661Z"
+  }
+},
+{
+  "model": "domain_layer.producto",
+  "pk": 2,
+  "fields": {
+    "codigo": "CDR-002",
+    "nombre": "Prueba 2",
+    "caracteristicas": "Test 2",
+    "precio_usd": "50.00",
+    "precio_eur": "42.50",
+    "precio_cop": "184741.00",
+    "empresa": "123456789",
+    "fecha_creacion": "2025-12-30T01:36:22.984Z",
+    "fecha_actualizacion": "2025-12-30T01:36:22.985Z"
+  }
+},
+{
+  "model": "domain_layer.producto",
+  "pk": 3,
+  "fields": {
+    "codigo": "CDR-003",
+    "nombre": "Prueba 3",
+    "caracteristicas": "Test 3",
+    "precio_usd": "99.97",
+    "precio_eur": "84.97",
+    "precio_cop": "369371.16",
+    "empresa": "123456789",
+    "fecha_creacion": "2025-12-30T01:36:42.082Z",
+    "fecha_actualizacion": "2025-12-30T01:36:42.082Z"
+  }
+},
+{
+  "model": "domain_layer.producto",
+  "pk": 4,
+  "fields": {
+    "codigo": "CDR-004",
+    "nombre": "Prueba 4",
+    "caracteristicas": "PRUEBA 4",
+    "precio_usd": "14.98",
+    "precio_eur": "12.73",
+    "precio_cop": "55348.40",
+    "empresa": "1020304050",
+    "fecha_creacion": "2025-12-30T01:37:06.116Z",
+    "fecha_actualizacion": "2025-12-30T01:37:24.272Z"
+  }
+},
+{
+  "model": "domain_layer.producto",
+  "pk": 5,
+  "fields": {
+    "codigo": "CDR-005",
+    "nombre": "Prueba 5",
+    "caracteristicas": "Test 5",
+    "precio_usd": "30.00",
+    "precio_eur": "25.50",
+    "precio_cop": "110844.60",
+    "empresa": "1020304050",
+    "fecha_creacion": "2025-12-30T01:37:45.107Z",
+    "fecha_actualizacion": "2025-12-30T01:37:45.107Z"
+  }
+},
+{
+  "model": "domain_layer.inventario",
+  "pk": 1,
+  "fields": {
+    "empresa": "123456789",
+    "producto": 1,
+    "cantidad": 50,
+    "fecha_ingreso": "2025-12-30T01:38:01.112Z",
+    "fecha_actualizacion": "2025-12-30T01:38:01.115Z",
+    "transaccion_hash": "0x6eeaf3ade13adfee4f32cdf4e16cf02cc373a13f953b14169a38ec64950cf3fd"
+  }
+},
+{
+  "model": "domain_layer.inventario",
+  "pk": 2,
+  "fields": {
+    "empresa": "123456789",
+    "producto": 2,
+    "cantidad": 100,
+    "fecha_ingreso": "2025-12-30T01:38:11.242Z",
+    "fecha_actualizacion": "2025-12-30T01:38:11.245Z",
+    "transaccion_hash": "0x24c6616a94864cd301caf134072909c34254b562b34fa94bbf27693cec872394"
+  }
+},
+{
+  "model": "domain_layer.inventario",
+  "pk": 3,
+  "fields": {
+    "empresa": "123456789",
+    "producto": 3,
+    "cantidad": 5,
+    "fecha_ingreso": "2025-12-30T01:38:23.942Z",
+    "fecha_actualizacion": "2025-12-30T01:38:23.944Z",
+    "transaccion_hash": "0xb7d096bdf35cb32c8d811534136b66ba28a01606175745b316697d4713f0f3a8"
+  }
+},
+{
+  "model": "domain_layer.inventario",
+  "pk": 4,
+  "fields": {
+    "empresa": "1020304050",
+    "producto": 4,
+    "cantidad": 2,
+    "fecha_ingreso": "2025-12-30T01:38:31.853Z",
+    "fecha_actualizacion": "2025-12-30T01:38:31.855Z",
+    "transaccion_hash": "0x010004bf7471318e4871b3588a5a9a0dcb3376910538fcf17cfccda0f1a4b4dc"
+  }
+},
+{
+  "model": "domain_layer.inventario",
+  "pk": 5,
+  "fields": {
+    "empresa": "1020304050",
+    "producto": 5,
+    "cantidad": 7,
+    "fecha_ingreso": "2025-12-30T01:38:39.890Z",
+    "fecha_actualizacion": "2025-12-30T01:38:39.892Z",
+    "transaccion_hash": "0x07f12bfcd035183ddd3b29269874ccb5838d4d2b30d594f87473235da87cbfdf"
+  }
+}
+]
