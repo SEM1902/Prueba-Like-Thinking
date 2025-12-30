@@ -8,7 +8,7 @@ services:
     rootDir: ./backend
     dockerContext: ./
     dockerfilePath: ./backend/Dockerfile
-    numReplicas: 1
+    # numReplicas: 1 # Not needed for free plan/web service defaults
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
@@ -37,8 +37,18 @@ services:
           name: prueba-db
           property: port
       - key: ALLOWED_HOSTS
-        value: "*" # Can be tightened later
-      # Add other necessary env vars here (e.g., EMAIL_*, GEMINI_API_KEY)
+        value: "*"
+      # Email Configuration
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_HOST_USER
+        value: "estradamontoyasimon803@gmail.com"
+      - key: EMAIL_HOST_PASSWORD
+        value: "qvjvacfkqnqqufmkx"
+      - key: GEMINI_API_KEY
+        value: "AIzaSyAcBBqihePdAexagmERQDrKtCewDiRyZy4"
 
   # Frontend Service (React + Nginx)
   - type: web
@@ -48,7 +58,7 @@ services:
     plan: free
     rootDir: ./frontend
     dockerfilePath: ./frontend/Dockerfile
-    numReplicas: 1
+    # numReplicas: 1 # Removed
     envVars:
       - key: REACT_APP_API_URL
         fromService:
