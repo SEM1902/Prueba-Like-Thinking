@@ -63,7 +63,7 @@ services:
         fromService:
           type: web
           name: prueba-backend
-          property: host
+          property: url
 
 databases:
   - name: prueba-db
