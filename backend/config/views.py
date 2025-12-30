@@ -11,5 +11,6 @@ def serve_react(request):
         
         with open(file_path, 'r') as f:
             return HttpResponse(f.read())
-    except FileNotFoundError:
-        return HttpResponseNotFound(f"React Build not found at: {file_path}. Did you git add backend/react_build?")
+    except Exception as e:
+        import traceback
+        return HttpResponse(f"<h1>Error serving React:</h1><pre>{traceback.format_exc()}</pre>", status=500)
