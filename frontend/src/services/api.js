@@ -11,7 +11,12 @@ if (!apiUrl) {
 }
 
 if (apiUrl && !apiUrl.startsWith('http') && apiUrl !== '') {
-  apiUrl = `https://${apiUrl}`;
+  // Fix for Render internal hostnames (e.g. prueba-backend-kdl4)
+  if (!apiUrl.includes('.') && !apiUrl.includes(':')) {
+    apiUrl = `https://${apiUrl}.onrender.com`;
+  } else {
+    apiUrl = `https://${apiUrl}`;
+  }
 }
 
 const api = axios.create({
