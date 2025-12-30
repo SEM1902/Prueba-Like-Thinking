@@ -5,6 +5,10 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
+# Accept API URL during build
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
 RUN npm install
 
 # Copy source code and build
