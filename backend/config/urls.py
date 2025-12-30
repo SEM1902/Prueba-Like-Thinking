@@ -6,12 +6,14 @@ from django.urls import path, include, re_path
 
 # ...
 
+from config.views import serve_react
+
 urlpatterns = [
     path('api/health/', health_check, name='health_check'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     # Catch-all for React SPA (must be last)
-    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
+    re_path(r'^.*$', serve_react),
 ]
 
 if settings.DEBUG:
