@@ -7,9 +7,13 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
-import os
+import sys
+from pathlib import Path
 
-from django.core.wsgi import get_wsgi_application
+# Add backend directory to sys.path to ensure module resolution works in Vercel
+file_path = Path(__file__).resolve()
+backend_dir = file_path.parent.parent
+sys.path.append(str(backend_dir))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
